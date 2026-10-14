@@ -1,7 +1,7 @@
 # Fieldcast brand concept
 
 Generated with the built-in image generation tool on 9 October 2026.
-Saved asset: `fieldcast-brand-concept.png`.
+Saved asset: `../fieldcast-logo-concept.png` (the same image; the copy that sat in the deployed folder was removed).
 Concept only; name selection is pending. The live site has not been changed.
 
 ## Prompt
