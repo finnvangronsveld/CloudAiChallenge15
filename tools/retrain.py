@@ -12,9 +12,14 @@ worse on the validation set. An automated pipeline that can silently make the
 deployed model worse is not an improvement over no pipeline. Set FORCE_RETRAIN=1
 to overrule, which the workflow exposes as a manual input.
 
-Training inputs are git-ignored by default, so when they are absent the script
-reports that it skipped and exits 0. A pipeline that fails because the data is
-not in the repository would just be noise on every push.
+The Citi Bike daily train/validation files (about 600 KB, aggregates of public
+trip and weather data) are committed as an exception to the rule that data stays
+out of git, so the Citi Bike model is refitted on every push to main. The mushroom
+training files stay out (the repository is public and they are most of the
+lecturer's dataset), so in CI the mushroom step reports that it skipped and exits
+0; locally, with the data present, it refits like the Citi Bike step. When the refit gives the same validation
+score as the committed model, nothing is written, so a push without new data
+does not produce a bot commit.
 
 Usage:
     py -3.11 tools/retrain.py [--dry-run]
@@ -68,8 +73,9 @@ def retrain_mushroom() -> str:
 
     train_df = pd.read_csv(train, index_col="row_id")
     val_df = pd.read_csv(validation, index_col="row_id")
-    y_train = (train_df["class"] == "p").astype(int)
-    y_val = (val_df["class"] == "p").astype(int)
+    # 02 writes readable labels ("edible" / "poisonous"); accept the raw letter codes too
+    y_train = train_df["class"].isin(["p", "poisonous"]).astype(int)
+    y_val = val_df["class"].isin(["p", "poisonous"]).astype(int)
 
     # The committed pipeline already carries the preprocessing. Cloning it keeps
     # the encoder settings (handle_unknown and friends) identical rather than
@@ -83,6 +89,10 @@ def retrain_mushroom() -> str:
 
     if new_auc + 1e-6 < old_auc and not FORCE:
         return f"mushroom=kept(old_auc={old_auc:.4f} new_auc={new_auc:.4f})"
+    # The JSON stores the AUC rounded to 4 decimals. The same data gives the same
+    # model, so do not rewrite the file: that would make a bot commit on every push.
+    if round(new_auc, 4) == old_auc and not FORCE:
+        return f"mushroom=unchanged(auc={new_auc:.4f})"
 
     if not DRY_RUN:
         joblib.dump(pipeline, model_path, compress=3)
@@ -132,6 +142,8 @@ def retrain_citibike() -> str:
 
     if new_mape > old_mape + 1e-6 and not FORCE:
         return f"citibike=kept(old_mape={old_mape:.2f} new_mape={new_mape:.2f})"
+    if round(new_mape, 2) == old_mape and not FORCE:  # same data, same model: nothing to commit
+        return f"citibike=unchanged(mape={new_mape:.2f})"
 
     if not DRY_RUN:
         joblib.dump(model, model_path, compress=3)

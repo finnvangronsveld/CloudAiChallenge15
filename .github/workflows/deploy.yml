@@ -11,9 +11,11 @@
 # break the deployment is not the model but the contract around it: the stem
 # rule, the decision threshold, the calendar columns.
 #
-# Retraining only happens on main, and only when the training inputs are present
-# in the checkout. They are git-ignored by default (see CLAUDE.md section 4), so
-# the step reports that it skipped rather than failing the build.
+# Retraining only happens on main. The Citi Bike daily train/validation files
+# (about 600 KB) are committed as an exception in .gitignore, so that model is
+# refitted on every push; without new data it reproduces the committed model and
+# reports "unchanged" (no bot commit). The mushroom training data stays out of the
+# public repository, so the mushroom step reports "skipped" in CI.
 
 name: models
 
