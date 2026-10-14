@@ -32,6 +32,13 @@ NYCCitiBikeSystemData/models/citibike_pycaret.pkl
 # Negeer alle inhoud van de NYCCitiBikeSystemData Data folder
 NYCCitiBikeSystemData/Data/*
 !NYCCitiBikeSystemData/Data/.gitkeep
+# Exception: the daily train/validation files (about 600 KB, aggregates of public trip and weather data) for tools/retrain.py in CI
+!NYCCitiBikeSystemData/Data/train/
+NYCCitiBikeSystemData/Data/train/*
+!NYCCitiBikeSystemData/Data/train/citibike_daily_train.csv
+!NYCCitiBikeSystemData/Data/validation/
+NYCCitiBikeSystemData/Data/validation/*
+!NYCCitiBikeSystemData/Data/validation/citibike_daily_validation.csv
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 

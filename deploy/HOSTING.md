@@ -115,30 +115,25 @@ are no deploy keys to manage.
 
 ## What is still open
 
-**`citibike_monthly.csv` must be committed.** The Citi Bike endpoint converts the
-model's ratio into trips with the twelve-month level from that file.
-`02_data_preparation.ipynb` writes it to `Data/`, which is git-ignored, so it
-cannot reach a deployment from there. Copy it to
-`NYCCitiBikeSystemData/models/citibike_monthly.csv` and commit it; the API looks
-there first and falls back to `Data/` for local runs.
+**Retraining runs on real data for Citi Bike (since 14 October 2026).** The daily
+train/validation files (`NYCCitiBikeSystemData/Data/{train,validation}/citibike_daily_*.csv`,
+about 600 KB) are committed as an exception to the "no data in git" rule;
+`.gitignore` whitelists exactly these two files. They are derived from public
+data (daily trip counts and NOAA weather); the 62 GB of trip CSVs and the test
+period stay out. On a push without new data the refit reproduces the committed
+model exactly (validation MAPE 9.64), so the job reports `unchanged` and makes no
+commit. When new rows are committed (after re-running `02` with new months), the
+job refits, compares on the validation year and commits the new model only if it
+is not worse.
 
-Until that happens the API runs fine and serves the mushroom model, and
-`/api/health` reports `citibike: monthly level file missing`. That still meets
-the MVP ("deploying at least one model in a web interface"), but the Citi Bike
-tab will show the 503 message.
+**The mushroom model is not retrained in CI, on purpose.** Its training files are
+most of the lecturer's dataset, and the repository is public, so they stay out of
+git and the mushroom step reports `skipped(no training data)`. The same script
+retrains it locally, where the data is present (tested: it reproduces the
+committed model, validation AUC 0.8193).
 
-**Retraining has no data in CI.** Both training sets are git-ignored, so the
-retrain job reports `skipped(no training data)` on every push. To make it real,
-commit the small training inputs:
-
-| File | Size | Enables |
-|---|---|---|
-| `SecondaryMushroom/Data/{train,validation}/mushroom_cleaned_*.csv` | about 1 MB | mushroom retraining |
-| `NYCCitiBikeSystemData/Data/{train,validation}/citibike_daily_*.csv` | under 1 MB | Citi Bike retraining |
-
-These are derived, not raw: the 62 GB of trip CSVs and the lecturer's mushroom
-file stay out of the repository either way. This is a team decision, because it
-changes the "data files are never committed" rule in CLAUDE.md section 4.
+`citibike_monthly.csv` is committed in `NYCCitiBikeSystemData/models/` (the API
+reads it from there). After re-running `02`, copy the new file there and commit it.
 
 ---
 

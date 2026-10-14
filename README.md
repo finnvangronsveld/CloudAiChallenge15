@@ -22,6 +22,22 @@ Machine Learning / Cloud AI challenge – theme "Going green" (Thomas More, grou
 | 3 | Mihai Constantin |
 | 4 | Zjef Schaeken |
 
+## Who did what
+
+Most of the project was built in joint sessions on Andreas's laptop: the four of us discussed
+the choices together (cleaning rules, the split, which models to try, how to deploy), with
+Andreas at the keyboard. On top of that:
+
+| Member | Work |
+|---|---|
+| Andreas Schellekens | The notebooks of both datasets (EDA, data preparation, models, comparisons), the Citi Bike download script, the AWS SageMaker run |
+| Finn Vangronsveld | The web frontend, including the 30-day Citi Bike view and the look-under view of the mushroom, and the period-forecast endpoint of the API |
+| Mihai Constantin | Re-ran all notebooks on a second laptop to check that they reproduce, and corrected the notebook text after a review |
+| Zjef Schaeken | Took part in the joint sessions |
+
+AI assistance: Claude Code (an AI assistant) drafted much of the code and text; every notebook
+says so in its header, and the team reviewed every step.
+
 ## Live demo: Fieldcast
 
 Observe. Model. Explore.
