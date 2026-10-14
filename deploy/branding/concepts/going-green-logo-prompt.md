@@ -1,7 +1,7 @@
 # Going Green Inference logo
 
 Generated on 9 October 2026 using the built-in image generation tool.
-Asset: `going-green-logo.png`, 1254 x 1254 pixels, RGBA with transparency.
+Asset: `going-green-logo-rejected.png` (rejected, never used on the site), 1254 x 1254 pixels, RGBA with transparency.
 The header uses the image's alpha as a CSS mask so it follows the active theme's
 accent colour. The browser tab uses the original cobalt PNG directly.
 

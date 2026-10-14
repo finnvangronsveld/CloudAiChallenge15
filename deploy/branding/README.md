@@ -39,3 +39,7 @@ Use ribbons as occasional framing, away from text and important controls.
 These PNG assets were created with built-in image generation. Full prompts are in
 [PROMPTS.md](PROMPTS.md). The set is separate from the deployed frontend; this work
 does not rename the Vercel project or publish the identity.
+
+Earlier concepts (the rejected leaf logo and the prompts behind the first Fieldcast concept) are in
+[`concepts/`](concepts/). They used to sit in `deploy/frontend/assets/` and were moved out on
+14 October 2026 so that the live site no longer serves them.
