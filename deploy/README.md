@@ -20,7 +20,7 @@ Layout:
 deploy/
   README.md          this file: the API contract and the reasoning
   HOSTING.md         the step-by-step hosting checklist
-  frontend/          static page: index.html, styles.css, app.js, vercel.json
+  frontend/          static page: index.html, styles.css, js/, vercel.json
   backend/
     app/
       main.py        FastAPI routes
